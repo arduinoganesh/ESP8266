@@ -1,9 +1,12 @@
+//Program to Control LED through Mobile using Wifi
+// Developer: Ganesh L Attarde
+
 #include <ESP8266WiFi.h>
  
 const char* ssid = "YOUR SSID";
 const char* password = "WIFI PASSWORD";
  
-int ledPin = 13; // GPIO13
+int ledPin = D2; // Port pin D2 connected to LED
 WiFiServer server(80);
  
 void setup() {
