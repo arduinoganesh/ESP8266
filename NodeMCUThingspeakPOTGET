@@ -1,3 +1,5 @@
+//IOT Program for Nodemcu to upload Analog Sensor i.e. POT data to thingspeak cloud
+
 #include <ESP8266WiFi.h>
 const int AnalogIn  = A0;
 
