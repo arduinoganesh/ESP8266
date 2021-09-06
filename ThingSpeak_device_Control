@@ -1,0 +1,74 @@
+//Program: Device Control through Thingspeak
+// Developer: Ganesh Attarde, GB Softronics Solutions, Nashik
+#include "ThingSpeak.h"
+#include <ESP8266WiFi.h>
+
+//Replace your wifi credentials here
+const char* ssid     = "YOUR_SSID";//Replace with your Wifi Name
+const char* password = "WIFI_PASSWORD";// Replace with your wifi Password
+
+//change your channel number here
+unsigned long channel =channelIDofThingspeak;//Replace with your own ThingSpeak Account Channle ID
+
+//1,2 and 3 are channel fields. You don't need to change if you are following this tutorial. 
+// However, you can modify it according to your application
+unsigned int field1 = 1;
+unsigned int field2 = 2;
+unsigned int field3 = 3;
+const int led1 = D1;
+const int led2 = D2;
+const int led3 = D3;
+int flag1 = 0;
+int flag2 = 0;
+int flag3 = 0;
+WiFiClient  client;
+void setup() {
+  Serial.begin(115200);
+  delay(100);
+  
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  digitalWrite(led1, 0);
+  digitalWrite(led2, 0);
+  digitalWrite(led3, 0);
+  // We start by connecting to a WiFi network
+ 
+  Serial.println();
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+  
+  WiFi.begin(ssid, password);
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");  
+  ThingSpeak.begin(client);
+}
+
+void loop() {
+ 
+  //get the last data of the fields
+  int led_1 = ThingSpeak.readFloatField(channel, led1);
+  int led_2 = ThingSpeak.readFloatField(channel, led2);
+  int led_3 = ThingSpeak.readFloatField(channel, led3);
+
+  if((led_1==flag1 && led_2==flag2 && led_3==flag3)==0) // if last data not changed, then
+  {
+    if(led_1!=flag1)
+        digitalWrite(D1,flag1=led_1);
+    if(led_2!=flag2)
+        digitalWrite(D2,flag2=led_2);
+    if(led_3!=flag3)
+        digitalWrite(D3,flag3=led_3);
+ 
+   Serial.println("LED1 is " + String(flag1));
+   Serial.println("LED2 is " + String(flag2));
+   Serial.println("LED3 is "+ String(flag3));
+   Serial.println("-------------");
+  } 
+}
